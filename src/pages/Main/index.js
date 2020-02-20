@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { FaGithub, FaPlus, FaSpinner } from 'react-icons/fa';
-import { Container, Form, ButtonSubmit } from './style';
-
+import { Container, Form, ButtonSubmit,List } from './style';
+import { Link } from 'react-router-dom';
 import api from '../../services/api';
+
 
 export default class Main extends Component {
     state = {
@@ -29,9 +30,25 @@ export default class Main extends Component {
             loading: false,
         });
     };
+    componentDidMount(){
+        const repositories = localStorage.getItem('repositories');
+
+        if(repositories){
+            this.setState({repositories:JSON.parse(repositories)});
+        }
+    }
+
+    componentDidUpdate(_,prevState){
+        const { repositories } = this.state;
+
+        if(repositories!==prevState.repositories){
+            localStorage.setItem('repositories',JSON.stringify(repositories));
+        }
+
+    }
 
     render() {
-        const { newRepo, loading } = this.state;
+        const { newRepo, loading,repositories } = this.state;
         return (
             <Container>
                 <h1>
@@ -54,6 +71,17 @@ export default class Main extends Component {
                         )}
                     </ButtonSubmit>
                 </Form>
+                <List>
+                    {repositories.map(repo=>(
+                        <li key={repo.name}>
+                            <span>{repo.name}</span>
+                            <Link to={`/repository/${encodeURIComponent(repo.name)}`}>Detalhes</Link>
+                        </li>
+
+                    ))
+
+                    }
+                </List>
             </Container>
         );
     }
