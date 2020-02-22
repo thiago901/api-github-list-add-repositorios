@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { FaGithub, FaPlus, FaSpinner } from 'react-icons/fa';
-import { Container, Form, ButtonSubmit,List } from './style';
 import { Link } from 'react-router-dom';
+import Container from '../../components/Container';
+import { Form, ButtonSubmit, List } from './style';
 import api from '../../services/api';
-
 
 export default class Main extends Component {
     state = {
@@ -30,25 +30,25 @@ export default class Main extends Component {
             loading: false,
         });
     };
-    componentDidMount(){
+
+    componentDidMount() {
         const repositories = localStorage.getItem('repositories');
 
-        if(repositories){
-            this.setState({repositories:JSON.parse(repositories)});
+        if (repositories) {
+            this.setState({ repositories: JSON.parse(repositories) });
         }
     }
 
-    componentDidUpdate(_,prevState){
+    componentDidUpdate(_, prevState) {
         const { repositories } = this.state;
 
-        if(repositories!==prevState.repositories){
-            localStorage.setItem('repositories',JSON.stringify(repositories));
+        if (repositories !== prevState.repositories) {
+            localStorage.setItem('repositories', JSON.stringify(repositories));
         }
-
     }
 
     render() {
-        const { newRepo, loading,repositories } = this.state;
+        const { newRepo, loading, repositories } = this.state;
         return (
             <Container>
                 <h1>
@@ -72,15 +72,18 @@ export default class Main extends Component {
                     </ButtonSubmit>
                 </Form>
                 <List>
-                    {repositories.map(repo=>(
+                    {repositories.map(repo => (
                         <li key={repo.name}>
                             <span>{repo.name}</span>
-                            <Link to={`/repository/${encodeURIComponent(repo.name)}`}>Detalhes</Link>
+                            <Link
+                                to={`/repository/${encodeURIComponent(
+                                    repo.name
+                                )}`}
+                            >
+                                Detalhes
+                            </Link>
                         </li>
-
-                    ))
-
-                    }
+                    ))}
                 </List>
             </Container>
         );
